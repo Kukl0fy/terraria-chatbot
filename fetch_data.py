@@ -9,8 +9,17 @@ from bs4 import BeautifulSoup
 
 API_URL = "https://terraria.wiki.gg/api.php"
 
+user_agents = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15",
+    "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0"
+]
+
+def get_random_user_agent():
+    return random.choice(user_agents)
+
 HEADERS = {
-    "User-Agent": "TerrariaStudentProject/1.0 (contact: hkukla@student.agh.edu.pl)",
+    "User-Agent": get_random_user_agent(),
     "Accept": "application/json",
 }
 
@@ -23,8 +32,8 @@ DOWNLOADED_FILE = BASE_DIR / "downloaded_pages.json"
 PENDING_FILE = BASE_DIR / "pending_categories.json"
 VISITED_FILE = BASE_DIR / "visited_categories.json"
 
-REQUEST_DELAY = 5
-CATEGORY_DELAY = 8
+REQUEST_DELAY = 15
+CATEGORY_DELAY = 20
 
 
 def load_json(path, default):
@@ -119,7 +128,7 @@ def get_category_members(category_name):
         "cmtitle": make_category_title(category_name),
         "cmtype": "page|subcat",
         "cmprop": "title|type",
-        "cmlimit": 500,
+        "cmlimit": 50,
         "format": "json",
     }
 
