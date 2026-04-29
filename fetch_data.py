@@ -23,8 +23,8 @@ DOWNLOADED_FILE = BASE_DIR / "downloaded_pages.json"
 PENDING_FILE = BASE_DIR / "pending_categories.json"
 VISITED_FILE = BASE_DIR / "visited_categories.json"
 
-REQUEST_DELAY = 3
-CATEGORY_DELAY = 1
+REQUEST_DELAY = 5
+CATEGORY_DELAY = 8
 
 
 def load_json(path, default):
