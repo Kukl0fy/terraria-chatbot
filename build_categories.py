@@ -33,6 +33,33 @@ def get_all_categories(limit: int = 1000) -> list[str]:
     categories = data["query"]["allcategories"]
     return [cat["*"] for cat in categories]
 
+#  def get_all_categories():
+#     url = "https://terraria.wiki.gg/api.php"
+#     categories = []
+#     accontinue = None
+#
+#     while True:
+#         params = {
+#             "action": "query",
+#             "list": "allcategories",
+#             "aclimit": "max",
+#             "format": "json",
+#         }
+#
+#         if accontinue:
+#             params["accontinue"] = accontinue
+#
+#         data = requests.get(url, params=params).json()
+#
+#         categories.extend(data["query"]["allcategories"])
+#
+#         if "continue" not in data:
+#             break
+#
+#         accontinue = data["continue"]["accontinue"]
+#
+#     return [cat["*"] for cat in categories]
+
 
 def is_useful_category(name: str) -> bool:
     lower_name = name.lower()
