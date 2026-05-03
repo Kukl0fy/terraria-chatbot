@@ -1,6 +1,6 @@
 import json
 
-from config import (
+from terraria_bot.config import (
     OUTPUT_FILE,
     DOWNLOADED_FILE,
     SKIPPED_FILE,
@@ -69,4 +69,18 @@ def save_page(title, category, text):
     }
 
     with OUTPUT_FILE.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(record, ensure_ascii=False) + "\n")
+
+def save_jsonl(path, records):
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+    with path.open("w", encoding="utf-8") as f:
+        for record in records:
+            f.write(json.dumps(record, ensure_ascii=False) + "\n")
+
+
+def append_jsonl(path, record):
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+    with path.open("a", encoding="utf-8") as f:
         f.write(json.dumps(record, ensure_ascii=False) + "\n")

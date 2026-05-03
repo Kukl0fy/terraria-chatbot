@@ -1,7 +1,7 @@
-import time
 from collections import deque
+import time
 
-from config import (
+from terraria_bot.config import (
     START_CATEGORY,
     OUTPUT_FILE,
     DOWNLOADED_FILE,
@@ -12,22 +12,21 @@ from config import (
     CATEGORY_DELAY,
 )
 
-from filters import (
+from terraria_bot.filters import (
     should_skip_category,
     should_skip_page,
     is_bad_text,
 )
 
-from storage import (
+from terraria_bot.storage import (
     load_json,
     save_state,
     get_saved_titles_from_jsonl,
     save_page,
 )
 
-from wiki_api import get_category_members
-from text_parser import get_page_text
-
+from terraria_bot.api.wiki_api import get_category_members
+from terraria_bot.text_parser import get_page_text
 
 def run_crawler():
     downloaded_pages = set(load_json(DOWNLOADED_FILE, []))
@@ -45,6 +44,7 @@ def run_crawler():
 
     if not pending_categories and START_CATEGORY not in visited_categories:
         pending_categories.append(START_CATEGORY)
+
 
     page_errors = 0
     category_errors = 0
@@ -244,3 +244,4 @@ def run_crawler():
         print(f"Bledy stron w tym uruchomieniu: {page_errors}")
         print(f"Bledy kategorii w tym uruchomieniu: {category_errors}")
         print(f"Dane: {OUTPUT_FILE.resolve()}")
+

@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 
-from wiki_api import api_get
+from terraria_bot.api.wiki_api import api_get
 
 
 def get_page_text(page_title):

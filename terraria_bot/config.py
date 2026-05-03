@@ -9,10 +9,10 @@ USER_AGENTS = [
     "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0",
 ]
 
-ROOT_DIR = Path(__file__).resolve().parent
+ROOT_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT_DIR / "data"
 
-# Tworzy tylko folder data, nie przenosi żadnych plików
+
 DATA_DIR.mkdir(exist_ok=True)
 
 START_CATEGORY = "Terraria"
@@ -23,7 +23,18 @@ SKIPPED_FILE = DATA_DIR / "skipped_pages.json"
 PENDING_FILE = DATA_DIR / "pending_categories.json"
 VISITED_FILE = DATA_DIR / "visited_categories.json"
 
+STRUCTURED_DIR = DATA_DIR / "structured"
+STRUCTURED_DIR.mkdir(exist_ok=True)
+
+STRUCTURED_REQUEST_DELAY = 2
+STRUCTURED_LIMIT = 250
+
+RECIPES_FIELDS_FILE = STRUCTURED_DIR / "recipes_fields.json"
+RECIPES_RAW_FILE = STRUCTURED_DIR / "recipes_raw.jsonl"
+ITEM_NAMES_FILE = STRUCTURED_DIR / "item_names.json"
+
+
 REQUEST_DELAY = 12
 CATEGORY_DELAY = 10
 
-MIN_TEXT_LENGTH = 50
+MIN_TEXT_LENGTH = 0

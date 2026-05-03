@@ -4,7 +4,7 @@ import time
 
 import requests
 
-from config import API_URL, USER_AGENTS, CATEGORY_DELAY
+from terraria_bot.config import API_URL, USER_AGENTS, CATEGORY_DELAY
 
 
 def get_random_user_agent():

@@ -1,6 +1,6 @@
 import re
 
-from config import MIN_TEXT_LENGTH
+from terraria_bot.config import MIN_TEXT_LENGTH
 
 
 SKIP_CATEGORY_EXACT = {
