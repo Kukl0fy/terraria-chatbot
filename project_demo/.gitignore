@@ -1,0 +1,13 @@
+chroma_terraria_db/
+
+
+.ipynb_checkpoints/
+
+.idea/
+
+__pycache__/
+*.pyc
+
+venv/
+env/
+.env
