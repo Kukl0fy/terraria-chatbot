@@ -18,3 +18,7 @@ env/
 
 # System / checkpoints
 .ipynb_checkpoints/
+
+# Large data files and backups
+wiki_data.jsonl
+*.bak
