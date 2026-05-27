@@ -13,27 +13,23 @@
     <style>
         /* Modern Design System & Variables */
         :root {
-            --bg-color: #07080d;
-            --bg-gradient: radial-gradient(circle at 50% 0%, #15102a 0%, #07080d 70%);
-            --panel-bg: rgba(18, 19, 32, 0.65);
-            --panel-border: rgba(255, 255, 255, 0.08);
-            --panel-border-glow: rgba(139, 92, 246, 0.2);
+            --bg-color: #bfe3f7;      /* Sky Blue Page Background */
+            --panel-bg: #5a433a;      /* Main Clay Brown Chat Background */
+            --panel-border: #423028;  /* Darker Earthy Brown Border */
             
-            /* Harmonic Terraria Hallow/Mana Palette */
-            --accent-primary: #8b5cf6; /* Mana Purple */
-            --accent-primary-glow: rgba(139, 92, 246, 0.45);
-            --accent-secondary: #06b6d4; /* Celestial Blue */
-            --accent-secondary-glow: rgba(6, 182, 212, 0.4);
-            --accent-success: #10b981; /* Mythril Green */
-            --accent-success-glow: rgba(16, 185, 129, 0.35);
+            /* Clean Earthy & Accent Palette */
+            --accent-primary: #6db185; /* Soft grass green accent */
+            --accent-primary-glow: rgba(109, 177, 133, 0.1);
+            --accent-secondary: #8ccda5;
+            --accent-secondary-glow: rgba(140, 205, 165, 0.1);
+            --accent-success: #6db185; /* Mythril Green */
+            --accent-success-glow: rgba(109, 177, 133, 0.1);
             --accent-error: #ef4444; /* Crimson Red */
-            --accent-error-glow: rgba(239, 68, 68, 0.35);
+            --accent-error-glow: rgba(239, 68, 68, 0.1);
             
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
-            --font-display: 'Outfit', sans-serif;
-            --font-sans: 'Inter', sans-serif;
-            --transition-speed: 0.3s;
+            --text-main: #f7f5f3;     /* Cream White Inside Panels */
+            --text-muted: #e5dec9;    /* Light Warm Sand Inside Panels */
+            --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
         /* Reset & Base Styles */
@@ -41,14 +37,19 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            border-radius: 0px !important; /* Force blocky style across the application */
             scrollbar-width: thin;
-            scrollbar-color: var(--accent-primary) rgba(0,0,0,0.1);
+            scrollbar-color: var(--accent-primary) var(--panel-bg);
         }
 
         body {
             background-color: var(--bg-color);
-            background-image: var(--bg-gradient);
-            color: var(--text-main);
+            background-image: url('/static/sky.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #2b201a;           /* Dark Brown text for the page */
             font-family: var(--font-sans);
             min-height: 100vh;
             display: flex;
@@ -57,37 +58,12 @@
             position: relative;
         }
 
-        /* Ambient Glow Effects */
-        .ambient-glow-1 {
-            position: absolute;
-            top: -200px;
-            left: 10%;
-            width: 500px;
-            height: 500px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .ambient-glow-2 {
-            position: absolute;
-            bottom: 10%;
-            right: -100px;
-            width: 600px;
-            height: 600px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
         /* App Container */
         .app-container {
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 2.5rem 1.5rem;
+            padding: 2rem 1.5rem;
             z-index: 10;
             flex-grow: 1;
             display: flex;
@@ -97,31 +73,28 @@
         /* Header Style */
         header {
             text-align: center;
-            margin-bottom: 2.5rem;
-            animation: fadeInDown 0.6s ease-out;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(66, 48, 40, 0.15);
+            padding-bottom: 1.5rem;
         }
 
         h1 {
-            font-family: var(--font-display);
-            font-size: 2.75rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #fff 30%, var(--accent-primary) 70%, var(--accent-secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -0.02em;
+            font-family: var(--font-sans);
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #2b201a;           /* Dark brown for sky blue contrast */
+            letter-spacing: -0.01em;
             margin-bottom: 0.5rem;
-            text-shadow: 0 0 40px rgba(139, 92, 246, 0.15);
         }
 
         .subtitle {
-            font-family: var(--font-display);
-            font-size: 1.1rem;
-            color: var(--text-muted);
+            font-size: 0.95rem;
+            color: #423028;           /* Earthy dark brown on sky blue */
             font-weight: 400;
         }
 
         .subtitle-highlight {
-            color: var(--accent-secondary);
+            color: #1e5233;           /* Dark Green contrast on sky blue */
             font-weight: 600;
         }
 
@@ -129,72 +102,55 @@
         .glass-panel {
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
-            border-radius: 20px;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
-            transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: none;
             position: relative;
             overflow: hidden;
-        }
-
-        .glass-panel::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
         }
 
         /* Wizard Portal (Initialization Steps) */
         .wizard-portal {
             display: flex;
             flex-direction: column;
-            gap: 2rem;
-            animation: fadeInUp 0.7s ease-out;
+            gap: 1.5rem;
         }
 
         .wizard-intro {
             text-align: center;
             max-width: 600px;
             margin: 0 auto;
-            color: var(--text-muted);
-            line-height: 1.6;
+            color: #423028;           /* High visibility on sky blue background */
+            line-height: 1.5;
+            font-size: 0.95rem;
         }
 
         .steps-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
         }
 
         .step-card {
-            padding: 2rem;
+            padding: 1.5rem;
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
-            border-radius: 20px;
-            background: rgba(13, 14, 25, 0.4);
+            gap: 1rem;
+            background: var(--panel-bg); /* #5a433a */
             border: 1px solid var(--panel-border);
-            transition: all var(--transition-speed) ease;
+            color: var(--text-main);
         }
 
         .step-card.active {
-            border-color: var(--accent-primary-glow);
-            box-shadow: 0 0 25px rgba(139, 92, 246, 0.08);
-            background: rgba(21, 16, 42, 0.3);
+            border-color: var(--accent-primary);
+            background: #6c5146;       /* Slightly lighter warm brown for active */
         }
 
         .step-card.completed {
-            border-color: var(--accent-success-glow);
-            box-shadow: 0 0 25px rgba(16, 185, 129, 0.05);
-            background: rgba(16, 185, 129, 0.03);
+            border-color: var(--accent-success);
+            background: #4c5a43;       /* Earthy forest green card */
         }
 
         .step-card.disabled {
-            opacity: 0.4;
+            opacity: 0.45;
             pointer-events: none;
         }
 
@@ -205,64 +161,60 @@
         }
 
         .step-badge {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 600;
-            padding: 0.35rem 0.75rem;
-            border-radius: 9999px;
+            padding: 0.2rem 0.5rem;
             background: rgba(255, 255, 255, 0.05);
             color: var(--text-muted);
-            font-family: var(--font-display);
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            border: 1px solid var(--panel-border);
         }
 
         .step-card.active .step-badge {
             background: var(--accent-primary);
+            border-color: var(--accent-primary);
             color: white;
-            box-shadow: 0 0 10px var(--accent-primary-glow);
         }
 
         .step-card.completed .step-badge {
             background: var(--accent-success);
+            border-color: var(--accent-success);
             color: white;
-            box-shadow: 0 0 10px var(--accent-success-glow);
         }
 
         .step-icon {
-            font-size: 1.5rem;
-            width: 42px;
-            height: 42px;
+            font-size: 1.25rem;
+            width: 36px;
+            height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--panel-border);
-            border-radius: 10px;
         }
 
         .step-card.active .step-icon {
-            background: rgba(139, 92, 246, 0.1);
-            border-color: var(--accent-primary-glow);
+            background: rgba(59, 130, 246, 0.1);
+            border-color: var(--accent-primary);
             color: var(--accent-primary);
         }
 
         .step-card.completed .step-icon {
             background: rgba(16, 185, 129, 0.1);
-            border-color: var(--accent-success-glow);
+            border-color: var(--accent-success);
             color: var(--accent-success);
         }
 
         .step-title {
-            font-family: var(--font-display);
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             font-weight: 600;
-            margin-top: 0.5rem;
         }
 
         .step-desc {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
-            line-height: 1.5;
+            line-height: 1.4;
             flex-grow: 1;
         }
 
@@ -271,38 +223,38 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 0.75rem 1.5rem;
-            font-family: var(--font-display);
+            padding: 0.6rem 1rem;
             font-weight: 600;
-            font-size: 0.95rem;
-            border-radius: 12px;
-            border: none;
+            font-size: 0.9rem;
+            border: 1px solid var(--panel-border);
             cursor: pointer;
-            transition: all 0.2s ease;
             gap: 0.5rem;
             width: 100%;
+            background: #1c1f2b;
+            color: var(--text-main);
         }
 
         .btn-primary {
             background: var(--accent-primary);
+            border-color: var(--accent-primary);
             color: white;
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.35);
         }
 
         .btn-primary:hover:not(:disabled) {
-            transform: translateY(-2px);
-            background: #9d76fa;
-            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.45);
+            background: #2563eb;
+            border-color: #2563eb;
         }
 
         .btn-success {
-            background: var(--accent-success);
+            background: #10b981;
+            border-color: #10b981;
             color: white;
             cursor: default;
         }
 
         .btn-disabled {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.03);
+            border-color: var(--panel-border);
             color: rgba(255, 255, 255, 0.2);
             cursor: not-allowed;
         }
@@ -310,9 +262,8 @@
         /* Loader & Progress bar */
         .progress-container {
             width: 100%;
-            height: 6px;
+            height: 4px;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 999px;
             overflow: hidden;
             display: none;
         }
@@ -320,17 +271,16 @@
         .progress-bar {
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-            border-radius: 999px;
+            background: var(--accent-primary);
             transition: width 0.3s ease;
         }
 
         .spinner {
-            width: 18px;
-            height: 18px;
+            width: 14px;
+            height: 14px;
             border: 2px solid rgba(255, 255, 255, 0.3);
             border-top: 2px solid white;
-            border-radius: 50%;
+            border-radius: 50% !important; /* Loader spinner requires border-radius */
             animation: spin 1s linear infinite;
             display: inline-block;
         }
@@ -344,12 +294,11 @@
 
         /* Live console output */
         .console-log {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 0.8rem;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            padding: 0.75rem;
+            font-family: monospace;
+            font-size: 0.75rem;
+            background: #0d0e12;
+            border: 1px solid var(--panel-border);
+            padding: 0.5rem;
             color: #10b981;
             height: 60px;
             overflow-y: auto;
@@ -357,52 +306,52 @@
             display: none;
         }
 
-        /* Chat Module (Hidden by default, slides in) */
+        /* Chat Module */
         .chat-portal {
             display: none;
-            grid-template-columns: 320px 1fr;
-            gap: 1.5rem;
+            grid-template-columns: 280px 1fr;
             flex-grow: 1;
-            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
             min-height: 550px;
         }
 
         /* Sidebar Stats Panel */
         .sidebar-stats {
-            padding: 1.5rem;
+            background: #423028;      /* Darker Brown for Sidebar Contrast */
+            padding: 1.25rem;
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1.25rem;
+            border-right: 1px solid var(--panel-border);
+            color: var(--text-main);
         }
 
         .sidebar-title {
-            font-family: var(--font-display);
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: var(--text-main);
             border-bottom: 1px solid var(--panel-border);
-            padding-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .stat-item {
             background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 12px;
-            padding: 1rem;
+            border: 1px solid var(--panel-border);
+            padding: 0.75rem;
             display: flex;
             flex-direction: column;
-            gap: 0.25rem;
+            gap: 0.15rem;
         }
 
         .stat-val {
-            font-family: var(--font-display);
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--accent-secondary);
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--accent-primary);
         }
 
         .stat-lbl {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
             font-weight: 500;
         }
@@ -411,31 +360,28 @@
         .suggestion-box {
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
-            flex-grow: 1;
+            gap: 0.5rem;
         }
 
         .suggest-btn {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--panel-border);
+            padding: 0.5rem 0.75rem;
             text-align: left;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-main);
             cursor: pointer;
-            transition: all 0.2s ease;
         }
 
         .suggest-btn:hover {
-            background: rgba(139, 92, 246, 0.08);
-            border-color: var(--accent-primary-glow);
-            transform: translateX(3px);
+            background: rgba(109, 177, 133, 0.15); /* Green hover */
+            border-color: var(--accent-primary);
             color: #fff;
         }
 
         /* Main Chat Window */
         .chat-main {
+            background: var(--panel-bg);  /* #5a433a (Main Clay Brown Chat Background) */
             display: flex;
             flex-direction: column;
             height: 100%;
@@ -446,28 +392,26 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 1.25rem 1.5rem;
+            padding: 0.85rem 1.25rem;
             border-bottom: 1px solid var(--panel-border);
-            background: rgba(13, 14, 25, 0.3);
+            background: rgba(0, 0, 0, 0.15);
         }
 
         .assistant-profile {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 0.5rem;
         }
 
         .avatar-wizard {
-            font-size: 1.25rem;
-            width: 38px;
-            height: 38px;
-            background: rgba(139, 92, 246, 0.15);
-            border: 1px solid var(--accent-primary-glow);
-            border-radius: 50%;
+            font-size: 1rem;
+            width: 28px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--panel-border);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 10px rgba(139, 92, 246, 0.2);
         }
 
         .assistant-meta {
@@ -476,9 +420,8 @@
         }
 
         .assistant-name {
-            font-family: var(--font-display);
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
 
         .assistant-status {
@@ -486,101 +429,84 @@
             color: var(--accent-success);
             display: flex;
             align-items: center;
-            gap: 0.35rem;
+            gap: 0.25rem;
         }
 
         .status-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
+            width: 6px;
+            height: 6px;
             background-color: var(--accent-success);
-            box-shadow: 0 0 8px var(--accent-success-glow);
-            animation: pulse 1.8s infinite;
+            display: inline-block;
         }
 
         /* Chat Logs */
         .chat-history {
             flex-grow: 1;
-            padding: 1.5rem;
+            padding: 1.25rem;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 1.25rem;
+            gap: 1rem;
             max-height: 480px;
             min-height: 350px;
-            scroll-behavior: smooth;
         }
 
         .chat-bubble {
             display: flex;
-            gap: 0.75rem;
+            flex-direction: column;
+            gap: 0.25rem;
             max-width: 85%;
-            animation: fadeIn 0.4s ease-out;
         }
 
         .chat-bubble.user {
             align-self: flex-end;
-            flex-direction: row-reverse;
+            align-items: flex-end;
         }
 
         .chat-bubble.assistant {
             align-self: flex-start;
+            align-items: flex-start;
         }
 
         .bubble-avatar {
-            font-size: 1.1rem;
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .chat-bubble.user .bubble-avatar {
-            background: rgba(6, 182, 212, 0.15);
-            border: 1px solid var(--accent-secondary-glow);
-        }
-
-        .chat-bubble.assistant .bubble-avatar {
-            background: rgba(139, 92, 246, 0.15);
-            border: 1px solid var(--accent-primary-glow);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 2px;
         }
 
         .bubble-content {
-            border-radius: 16px;
-            padding: 0.85rem 1.15rem;
-            font-size: 0.925rem;
-            line-height: 1.6;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            border: 1px solid var(--panel-border);
         }
 
         .chat-bubble.user .bubble-content {
-            background: linear-gradient(135deg, var(--accent-secondary) -10%, #086a87 110%);
-            color: white;
-            border-top-right-radius: 4px;
-            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.15);
+            background: var(--accent-primary);  /* #6db185 */
+            border-color: #55916b;
+            color: #17241c;                      /* High contrast dark text on soft green */
         }
 
         .chat-bubble.assistant .bubble-content {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--panel-border);
+            background: #423028;                 /* Darker earthy brown for answer container */
+            border-color: var(--panel-border);
             color: var(--text-main);
-            border-top-left-radius: 4px;
         }
 
-        /* Source accordion inside Assistant responses */
+        /* Flat Source accordion */
         .source-accordion {
-            margin-top: 0.75rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding-top: 0.6rem;
+            margin-top: 0.5rem;
+            border-top: 1px solid var(--panel-border);
+            padding-top: 0.5rem;
         }
 
         .source-toggle {
             background: none;
             border: none;
             color: var(--accent-primary);
-            font-family: var(--font-display);
             font-size: 0.75rem;
             font-weight: 600;
             cursor: pointer;
@@ -590,18 +516,18 @@
         }
 
         .source-toggle:hover {
-            color: #a78bfa;
+            color: var(--accent-secondary);
+            text-decoration: underline;
         }
 
         .source-content {
             display: none;
             margin-top: 0.5rem;
-            background: rgba(0, 0, 0, 0.35);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 8px;
-            padding: 0.65rem;
+            background: #241b17;
+            border: 1px solid var(--panel-border);
+            padding: 0.5rem;
             font-size: 0.75rem;
-            font-family: 'Courier New', Courier, monospace;
+            font-family: monospace;
             color: var(--text-muted);
             max-height: 150px;
             overflow-y: auto;
@@ -613,13 +539,12 @@
             display: flex;
             align-items: center;
             gap: 4px;
-            padding: 0.5rem 0.25rem;
+            padding: 0.25rem 0.1rem;
         }
 
         .typing-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
+            width: 5px;
+            height: 5px;
             background-color: var(--text-muted);
             animation: bounce 1.4s infinite ease-in-out both;
         }
@@ -629,11 +554,11 @@
 
         /* Chat Input Field */
         .chat-input-panel {
-            padding: 1.25rem 1.5rem;
+            padding: 1rem 1.25rem;
             border-top: 1px solid var(--panel-border);
-            background: rgba(13, 14, 25, 0.4);
+            background: rgba(0, 0, 0, 0.15);
             display: flex;
-            gap: 0.75rem;
+            gap: 0.5rem;
         }
 
         .input-wrapper {
@@ -643,59 +568,51 @@
 
         .chat-input {
             width: 100%;
-            background: rgba(255, 255, 255, 0.03);
+            background: #352924;
             border: 1px solid var(--panel-border);
-            border-radius: 12px;
-            padding: 0.85rem 1.15rem;
+            padding: 0.75rem 1rem;
             color: white;
             font-family: var(--font-sans);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             outline: none;
-            transition: all 0.2s ease;
         }
 
         .chat-input:focus {
-            border-color: var(--accent-primary-glow);
-            background: rgba(255, 255, 255, 0.05);
-            box-shadow: 0 0 15px rgba(139, 92, 246, 0.05);
+            border-color: var(--accent-primary);
+            background: #3c2f29;
         }
 
         .chat-send-btn {
             background: var(--accent-primary);
-            border: none;
-            color: white;
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
+            border: 1px solid var(--accent-primary);
+            color: #17241c;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 10px rgba(139, 92, 246, 0.25);
             flex-shrink: 0;
         }
 
         .chat-send-btn:hover {
-            transform: translateY(-2px);
-            background: #9d76fa;
-            box-shadow: 0 6px 15px rgba(139, 92, 246, 0.35);
+            background: #599870;
+            border-color: #599870;
         }
 
         .chat-send-btn:disabled {
             background: rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.2);
-            box-shadow: none;
+            border-color: var(--panel-border);
+            color: rgba(255, 255, 255, 0.25);
             cursor: not-allowed;
-            transform: none;
         }
 
         /* Footer */
         footer {
             text-align: center;
             margin-top: auto;
-            padding-top: 2.5rem;
-            font-size: 0.8rem;
+            padding-top: 2rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
         }
 
@@ -704,86 +621,53 @@
             to { transform: rotate(360deg); }
         }
 
-        @keyframes pulse {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-        }
-
         @keyframes bounce {
             0%, 80%, 100% { transform: scale(0); }
             40% { transform: scale(1.0); }
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
     </style>
 </head>
 <body>
-    <div class="ambient-glow-1"></div>
-    <div class="ambient-glow-2"></div>
-    
     <div class="app-container">
         <!-- Header -->
         <header>
-            <h1 id="app-title">Terraria Chat</h1>
-            <p class="subtitle">AI Guide for <span class="subtitle-highlight">Crafting, Stats & Wiki Archive</span></p>
+            <h1 id="app-title">Terraria Wiki Guide</h1>
+            <p class="subtitle">Searchable Archive for <span class="subtitle-highlight">Crafting Recipes, Stats & Wiki Pages</span></p>
         </header>
-
+ 
         <!-- SETUP PORTAL (Wizard Flow) -->
         <div id="setup-portal" class="wizard-portal">
             <p class="wizard-intro">
-                Before seeking wisdom from the archives, you must awake the magical RAG components.
-                Perform these setup steps in order to connect the models and load databases.
+                Initialize the local Wiki search engine to load vector databases and index all wiki pages.
             </p>
-            
+             
             <div class="steps-grid">
                 <!-- Step 1 Card -->
                 <div id="card-step-1" class="glass-panel step-card active">
                     <div class="step-header">
                         <span class="step-badge">Step 1</span>
-                        <div class="step-icon">🔮</div>
                     </div>
                     <h3 class="step-title">Core AI Models</h3>
                     <p class="step-desc">Connects to Ollama and initializes the embeddings (nomic-embed-text) and target LLM (qwen2.5:14b) into active memory.</p>
                     <button id="btn-step-1" class="btn btn-primary" onclick="initModels()">Load Core AI</button>
                     <div id="status-step-1" class="status-text">Connecting...</div>
                 </div>
-
+ 
                 <!-- Step 2 Card -->
                 <div id="card-step-2" class="glass-panel step-card disabled">
                     <div class="step-header">
                         <span class="step-badge">Step 2</span>
-                        <div class="step-icon">🗄️</div>
                     </div>
                     <h3 class="step-title">Vector Databases</h3>
                     <p class="step-desc">Loads the pre-constructed Chroma vector DB archives (wiki content & structured items) without scraping them again.</p>
                     <button id="btn-step-2" class="btn btn-disabled" onclick="initDbs()" disabled>Connect Databases</button>
                     <div id="status-step-2" class="status-text">Connecting...</div>
                 </div>
-
+ 
                 <!-- Step 3 Card -->
                 <div id="card-step-3" class="glass-panel step-card disabled">
                     <div class="step-header">
                         <span class="step-badge">Step 3</span>
-                        <div class="step-icon">📚</div>
                     </div>
                     <h3 class="step-title">Wiki Index Search</h3>
                     <p class="step-desc">Extracts wiki article metadata to map pages into a high-performance index, facilitating extremely accurate wiki answers.</p>
@@ -796,7 +680,7 @@
                 </div>
             </div>
         </div>
-
+ 
         <!-- CHAT PORTAL -->
         <div id="chat-portal" class="glass-panel chat-portal">
             <!-- Sidebar Stats & Preset Prompts -->
@@ -810,41 +694,30 @@
                     <span id="stat-wiki" class="stat-val">0</span>
                     <span class="stat-lbl">Indexed Wiki Articles</span>
                 </div>
-                
+                 
                 <div class="sidebar-title" style="margin-top: 1rem;">Suggested Inquiries</div>
                 <div class="suggestion-box">
-                    <button class="suggest-btn" onclick="askPreset('How do I craft Night\'s Edge?')">🔮 How to craft Night's Edge?</button>
-                    <button class="suggest-btn" onclick="askPreset('What stats does Starfury have?')">🗡️ What stats does Starfury have?</button>
-                    <button class="suggest-btn" onclick="askPreset('What is Queen Bee?')">🐝 What is Queen Bee?</button>
-                    <button class="suggest-btn" onclick="askPreset('How do I craft Lava Waders and what do they do?')">🥾 How to craft Lava Waders?</button>
+                    <button class="suggest-btn" onclick="askPreset('How do I craft Night\'s Edge?')">How to craft Night's Edge?</button>
+                    <button class="suggest-btn" onclick="askPreset('What stats does Starfury have?')">What stats does Starfury have?</button>
+                    <button class="suggest-btn" onclick="askPreset('What is Queen Bee?')">What is Queen Bee?</button>
+                    <button class="suggest-btn" onclick="askPreset('How do I craft Lava Waders and what do they do?')">How to craft Lava Waders?</button>
                 </div>
             </div>
-
+ 
             <!-- Chat Panel -->
             <div class="chat-main">
-                <!-- Header bar -->
-                <div class="chat-header">
-                    <div class="assistant-profile">
-                        <div class="avatar-wizard">🧙</div>
-                        <div class="assistant-meta">
-                            <span class="assistant-name">The Wise Guide</span>
-                            <span class="assistant-status"><div class="status-dot"></div> Online</span>
-                        </div>
-                    </div>
-                    <div style="font-size: 0.8rem; color: var(--text-muted);">Terraria RAG v1.2</div>
-                </div>
-                
+
                 <!-- Chat Window -->
                 <div id="chat-history" class="chat-history">
                     <!-- Welcoming bubble -->
                     <div class="chat-bubble assistant">
-                        <div class="bubble-avatar">🧙</div>
+                        <div class="bubble-avatar">Guide</div>
                         <div class="bubble-content">
-                            Greetings, hero! The archives are fully charged. What information do you seek regarding the realms of Terraria?
+                            Greetings, hero! The archives are fully loaded. What information do you seek regarding the items, recipes, or realms of Terraria?
                         </div>
                     </div>
                 </div>
-                
+                 
                 <!-- Chat Input bar -->
                 <div class="chat-input-panel">
                     <div class="input-wrapper">
@@ -859,10 +732,9 @@
                 </div>
             </div>
         </div>
-
+ 
         <!-- Footer -->
         <footer>
-            <p>&copy; 2026 Terraria RAG Guide UI. Powered by Flask, ChromaDB and local Ollama.</p>
         </footer>
     </div>
 
@@ -1128,7 +1000,7 @@
             const bubble = document.createElement("div");
             bubble.className = `chat-bubble ${sender}`;
             
-            const avatar = sender === "user" ? "👤" : "🧙";
+            const avatar = sender === "user" ? "User" : "Guide";
             bubble.innerHTML = `
                 <div class="bubble-avatar">${avatar}</div>
                 <div class="bubble-content">${escapeHTML(text)}</div>
@@ -1157,7 +1029,7 @@
                 sourceHtml = `
                     <div class="source-accordion">
                         <button class="source-toggle" onclick="toggleSources('${uniqueId}')">
-                            📜 View Retrieval Sources (${usedTypes.join(", ")}) ${matchedItem ? `for "${matchedItem}"` : ""} ▾
+                            View Retrieval Sources (${usedTypes.join(", ")}) ${matchedItem ? `for "${matchedItem}"` : ""} ▾
                         </button>
                         <div id="${uniqueId}" class="source-content">${sourceItems}</div>
                     </div>
@@ -1165,7 +1037,7 @@
             }
 
             bubble.innerHTML = `
-                <div class="bubble-avatar">🧙</div>
+                <div class="bubble-avatar">Guide</div>
                 <div class="bubble-content">
                     <div class="answer-text">${formatAnswer(answer)}</div>
                     ${sourceHtml}
@@ -1195,7 +1067,7 @@
             bubble.id = loaderId;
             bubble.className = "chat-bubble assistant";
             bubble.innerHTML = `
-                <div class="bubble-avatar">🧙</div>
+                <div class="bubble-avatar">Guide</div>
                 <div class="bubble-content">
                     <div class="typing-loader">
                         <div class="typing-dot"></div>
