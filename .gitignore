@@ -1,0 +1,24 @@
+# Databases
+chroma_wiki_db/
+chroma_structured_db/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environment
+.venv/
+venv/
+env/
+.env
+
+# IDEs
+.idea/
+.vscode/
+
+# System / checkpoints
+.ipynb_checkpoints/
+
+# Large data files and backups
+wiki_data.jsonl
+*.bak

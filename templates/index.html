@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Immersive Web Interface for the Terraria RAG QA AI Chatbot Assistant. Retrieve crafting recipes, item stats, and wiki information.">
+    <title>Terraria Chat — Guide's Archive</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Modern Design System & Variables */
+        :root {
+            --bg-color: #bfe3f7;      /* Sky Blue Page Background */
+            --panel-bg: #5a433a;      /* Main Clay Brown Chat Background */
+            --panel-border: #423028;  /* Darker Earthy Brown Border */
+            
+            /* Clean Earthy & Accent Palette */
+            --accent-primary: #6db185; /* Soft grass green accent */
+            --accent-primary-glow: rgba(109, 177, 133, 0.1);
+            --accent-secondary: #8ccda5;
+            --accent-secondary-glow: rgba(140, 205, 165, 0.1);
+            --accent-success: #6db185; /* Mythril Green */
+            --accent-success-glow: rgba(109, 177, 133, 0.1);
+            --accent-error: #ef4444; /* Crimson Red */
+            --accent-error-glow: rgba(239, 68, 68, 0.1);
+            
+            --text-main: #f7f5f3;     /* Cream White Inside Panels */
+            --text-muted: #e5dec9;    /* Light Warm Sand Inside Panels */
+            --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        /* Reset & Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            border-radius: 0px !important; /* Force blocky style across the application */
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-primary) var(--panel-bg);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: url('/static/sky.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #2b201a;           /* Dark Brown text for the page */
+            font-family: var(--font-sans);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* App Container */
+        .app-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            z-index: 10;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Style */
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(66, 48, 40, 0.15);
+            padding-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-family: var(--font-sans);
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #2b201a;           /* Dark brown for sky blue contrast */
+            letter-spacing: -0.01em;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: #423028;           /* Earthy dark brown on sky blue */
+            font-weight: 400;
+        }
+
+        .subtitle-highlight {
+            color: #1e5233;           /* Dark Green contrast on sky blue */
+            font-weight: 600;
+        }
+
+        /* Main Workspace Panels */
+        .glass-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            box-shadow: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Wizard Portal (Initialization Steps) */
+        .wizard-portal {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .wizard-intro {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+            color: #423028;           /* High visibility on sky blue background */
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .step-card {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            background: var(--panel-bg); /* #5a433a */
+            border: 1px solid var(--panel-border);
+            color: var(--text-main);
+        }
+
+        .step-card.active {
+            border-color: var(--accent-primary);
+            background: #6c5146;       /* Slightly lighter warm brown for active */
+        }
+
+        .step-card.completed {
+            border-color: var(--accent-success);
+            background: #4c5a43;       /* Earthy forest green card */
+        }
+
+        .step-card.disabled {
+            opacity: 0.45;
+            pointer-events: none;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .step-badge {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.2rem 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1px solid var(--panel-border);
+        }
+
+        .step-card.active .step-badge {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: white;
+        }
+
+        .step-card.completed .step-badge {
+            background: var(--accent-success);
+            border-color: var(--accent-success);
+            color: white;
+        }
+
+        .step-icon {
+            font-size: 1.25rem;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--panel-border);
+        }
+
+        .step-card.active .step-icon {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .step-card.completed .step-icon {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--accent-success);
+            color: var(--accent-success);
+        }
+
+        .step-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        .step-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+            flex-grow: 1;
+        }
+
+        /* Action Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 1px solid var(--panel-border);
+            cursor: pointer;
+            gap: 0.5rem;
+            width: 100%;
+            background: #1c1f2b;
+            color: var(--text-main);
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #2563eb;
+            border-color: #2563eb;
+        }
+
+        .btn-success {
+            background: #10b981;
+            border-color: #10b981;
+            color: white;
+            cursor: default;
+        }
+
+        .btn-disabled {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: var(--panel-border);
+            color: rgba(255, 255, 255, 0.2);
+            cursor: not-allowed;
+        }
+
+        /* Loader & Progress bar */
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--accent-primary);
+            transition: width 0.3s ease;
+        }
+
+        .spinner {
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50% !important; /* Loader spinner requires border-radius */
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+
+        .status-text {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--accent-primary);
+            display: none;
+        }
+
+        /* Live console output */
+        .console-log {
+            font-family: monospace;
+            font-size: 0.75rem;
+            background: #0d0e12;
+            border: 1px solid var(--panel-border);
+            padding: 0.5rem;
+            color: #10b981;
+            height: 60px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            display: none;
+        }
+
+        /* Chat Module */
+        .chat-portal {
+            display: none;
+            grid-template-columns: 280px 1fr;
+            flex-grow: 1;
+            min-height: 550px;
+        }
+
+        /* Sidebar Stats Panel */
+        .sidebar-stats {
+            background: #423028;      /* Darker Brown for Sidebar Contrast */
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            border-right: 1px solid var(--panel-border);
+            color: var(--text-main);
+        }
+
+        .sidebar-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--panel-border);
+            padding-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--panel-border);
+            padding: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+        }
+
+        .stat-val {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+
+        .stat-lbl {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Suggestion Panel inside Sidebar */
+        .suggestion-box {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .suggest-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--panel-border);
+            padding: 0.5rem 0.75rem;
+            text-align: left;
+            font-size: 0.8rem;
+            color: var(--text-main);
+            cursor: pointer;
+        }
+
+        .suggest-btn:hover {
+            background: rgba(109, 177, 133, 0.15); /* Green hover */
+            border-color: var(--accent-primary);
+            color: #fff;
+        }
+
+        /* Main Chat Window */
+        .chat-main {
+            background: var(--panel-bg);  /* #5a433a (Main Clay Brown Chat Background) */
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        /* Chat Header status indicator */
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.85rem 1.25rem;
+            border-bottom: 1px solid var(--panel-border);
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        .assistant-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .avatar-wizard {
+            font-size: 1rem;
+            width: 28px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--panel-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .assistant-meta {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .assistant-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .assistant-status {
+            font-size: 0.75rem;
+            color: var(--accent-success);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--accent-success);
+            display: inline-block;
+        }
+
+        /* Chat Logs */
+        .chat-history {
+            flex-grow: 1;
+            padding: 1.25rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-height: 480px;
+            min-height: 350px;
+        }
+
+        .chat-bubble {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            max-width: 85%;
+        }
+
+        .chat-bubble.user {
+            align-self: flex-end;
+            align-items: flex-end;
+        }
+
+        .chat-bubble.assistant {
+            align-self: flex-start;
+            align-items: flex-start;
+        }
+
+        .bubble-avatar {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 2px;
+        }
+
+        .bubble-content {
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            border: 1px solid var(--panel-border);
+        }
+
+        .chat-bubble.user .bubble-content {
+            background: var(--accent-primary);  /* #6db185 */
+            border-color: #55916b;
+            color: #17241c;                      /* High contrast dark text on soft green */
+        }
+
+        .chat-bubble.assistant .bubble-content {
+            background: #423028;                 /* Darker earthy brown for answer container */
+            border-color: var(--panel-border);
+            color: var(--text-main);
+        }
+
+        /* Flat Source accordion */
+        .source-accordion {
+            margin-top: 0.5rem;
+            border-top: 1px solid var(--panel-border);
+            padding-top: 0.5rem;
+        }
+
+        .source-toggle {
+            background: none;
+            border: none;
+            color: var(--accent-primary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .source-toggle:hover {
+            color: var(--accent-secondary);
+            text-decoration: underline;
+        }
+
+        .source-content {
+            display: none;
+            margin-top: 0.5rem;
+            background: #241b17;
+            border: 1px solid var(--panel-border);
+            padding: 0.5rem;
+            font-size: 0.75rem;
+            font-family: monospace;
+            color: var(--text-muted);
+            max-height: 150px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        /* Typing Placeholder */
+        .typing-loader {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0.25rem 0.1rem;
+        }
+
+        .typing-dot {
+            width: 5px;
+            height: 5px;
+            background-color: var(--text-muted);
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        /* Chat Input Field */
+        .chat-input-panel {
+            padding: 1rem 1.25rem;
+            border-top: 1px solid var(--panel-border);
+            background: rgba(0, 0, 0, 0.15);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+            flex-grow: 1;
+        }
+
+        .chat-input {
+            width: 100%;
+            background: #352924;
+            border: 1px solid var(--panel-border);
+            padding: 0.75rem 1rem;
+            color: white;
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .chat-input:focus {
+            border-color: var(--accent-primary);
+            background: #3c2f29;
+        }
+
+        .chat-send-btn {
+            background: var(--accent-primary);
+            border: 1px solid var(--accent-primary);
+            color: #17241c;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .chat-send-btn:hover {
+            background: #599870;
+            border-color: #599870;
+        }
+
+        .chat-send-btn:disabled {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--panel-border);
+            color: rgba(255, 255, 255, 0.25);
+            cursor: not-allowed;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: auto;
+            padding-top: 2rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Keyframes Animations */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header>
+            <h1 id="app-title">Terraria Wiki Guide</h1>
+            <p class="subtitle">Searchable Archive for <span class="subtitle-highlight">Crafting Recipes, Stats & Wiki Pages</span></p>
+        </header>
+ 
+        <!-- SETUP PORTAL (Wizard Flow) -->
+        <div id="setup-portal" class="wizard-portal">
+            <p class="wizard-intro">
+                Initialize the local Wiki search engine to load vector databases and index all wiki pages.
+            </p>
+             
+            <div class="steps-grid">
+                <!-- Step 1 Card -->
+                <div id="card-step-1" class="glass-panel step-card active">
+                    <div class="step-header">
+                        <span class="step-badge">Step 1</span>
+                    </div>
+                    <h3 class="step-title">Core AI Models</h3>
+                    <p class="step-desc">Connects to Ollama and initializes the embeddings (nomic-embed-text) and target LLM (qwen2.5:14b) into active memory.</p>
+                    <button id="btn-step-1" class="btn btn-primary" onclick="initModels()">Load Core AI</button>
+                    <div id="status-step-1" class="status-text">Connecting...</div>
+                </div>
+ 
+                <!-- Step 2 Card -->
+                <div id="card-step-2" class="glass-panel step-card disabled">
+                    <div class="step-header">
+                        <span class="step-badge">Step 2</span>
+                    </div>
+                    <h3 class="step-title">Vector Databases</h3>
+                    <p class="step-desc">Loads the pre-constructed Chroma vector DB archives (wiki content & structured items) without scraping them again.</p>
+                    <button id="btn-step-2" class="btn btn-disabled" onclick="initDbs()" disabled>Connect Databases</button>
+                    <div id="status-step-2" class="status-text">Connecting...</div>
+                </div>
+ 
+                <!-- Step 3 Card -->
+                <div id="card-step-3" class="glass-panel step-card disabled">
+                    <div class="step-header">
+                        <span class="step-badge">Step 3</span>
+                    </div>
+                    <h3 class="step-title">Wiki Index Search</h3>
+                    <p class="step-desc">Extracts wiki article metadata to map pages into a high-performance index, facilitating extremely accurate wiki answers.</p>
+                    <button id="btn-step-3" class="btn btn-disabled" onclick="initIndex()" disabled>Index Wiki Pages</button>
+                    <div id="status-step-3" class="status-text">Processing...</div>
+                    <div id="progress-step-3" class="progress-container">
+                        <div id="bar-step-3" class="progress-bar"></div>
+                    </div>
+                    <div id="console-step-3" class="console-log"></div>
+                </div>
+            </div>
+        </div>
+ 
+        <!-- CHAT PORTAL -->
+        <div id="chat-portal" class="glass-panel chat-portal">
+            <!-- Sidebar Stats & Preset Prompts -->
+            <div class="sidebar-stats">
+                <div class="sidebar-title">Archive Statistics</div>
+                <div class="stat-item">
+                    <span id="stat-items" class="stat-val">0</span>
+                    <span class="stat-lbl">Terraria Items</span>
+                </div>
+                <div class="stat-item">
+                    <span id="stat-wiki" class="stat-val">0</span>
+                    <span class="stat-lbl">Indexed Wiki Articles</span>
+                </div>
+                 
+                <div class="sidebar-title" style="margin-top: 1rem;">Suggested Inquiries</div>
+                <div class="suggestion-box">
+                    <button class="suggest-btn" onclick="askPreset('How do I craft Night\'s Edge?')">How to craft Night's Edge?</button>
+                    <button class="suggest-btn" onclick="askPreset('What stats does Starfury have?')">What stats does Starfury have?</button>
+                    <button class="suggest-btn" onclick="askPreset('What is Queen Bee?')">What is Queen Bee?</button>
+                    <button class="suggest-btn" onclick="askPreset('How do I craft Lava Waders and what do they do?')">How to craft Lava Waders?</button>
+                </div>
+            </div>
+ 
+            <!-- Chat Panel -->
+            <div class="chat-main">
+
+                <!-- Chat Window -->
+                <div id="chat-history" class="chat-history">
+                    <!-- Welcoming bubble -->
+                    <div class="chat-bubble assistant">
+                        <div class="bubble-avatar">Guide</div>
+                        <div class="bubble-content">
+                            Greetings, hero! The archives are fully loaded. What information do you seek regarding the items, recipes, or realms of Terraria?
+                        </div>
+                    </div>
+                </div>
+                 
+                <!-- Chat Input bar -->
+                <div class="chat-input-panel">
+                    <div class="input-wrapper">
+                        <input id="chat-input" type="text" class="chat-input" placeholder="Type your recipe or wiki query..." onkeydown="handleInputKey(event)">
+                    </div>
+                    <button id="chat-send-btn" class="chat-send-btn" onclick="submitMessage()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+ 
+        <!-- Footer -->
+        <footer>
+        </footer>
+    </div>
+
+    <!-- Frontend Script Logic -->
+    <script>
+        // Check current engine status on load to sync UI
+        document.addEventListener("DOMContentLoaded", () => {
+            checkStatus();
+        });
+
+        // Global status checker
+        async function checkStatus() {
+            try {
+                const res = await fetch("/api/status");
+                const data = await res.json();
+                syncUI(data);
+                
+                // If index is building, keep polling status
+                if (data.state === "BUILDING_INDEX") {
+                    setTimeout(checkStatus, 1000);
+                }
+            } catch (err) {
+                console.error("Error polling engine status:", err);
+            }
+        }
+
+        // Synchronize setup steps and interface with backend state
+        function syncUI(statusData) {
+            const state = statusData.state;
+            const progress = statusData.progress_percent || 0;
+            const msg = statusData.progress_msg || "";
+            const err = statusData.error_message || "";
+            
+            // Step card variables
+            const c1 = document.getElementById("card-step-1");
+            const c2 = document.getElementById("card-step-2");
+            const c3 = document.getElementById("card-step-3");
+            const b1 = document.getElementById("btn-step-1");
+            const b2 = document.getElementById("btn-step-2");
+            const b3 = document.getElementById("btn-step-3");
+            const s1 = document.getElementById("status-step-1");
+            const s2 = document.getElementById("status-step-2");
+            const s3 = document.getElementById("status-step-3");
+            
+            // Custom console and progress bar for Step 3
+            const pBarContainer = document.getElementById("progress-step-3");
+            const pBar = document.getElementById("bar-step-3");
+            const pConsole = document.getElementById("console-step-3");
+
+            // Reset error/loading UI structures
+            [c1, c2, c3].forEach(c => c.style.borderColor = "");
+
+            if (state === "NOT_STARTED") {
+                // Initial setup state
+            } 
+            else if (state === "LOADING_MODELS") {
+                c1.className = "glass-panel step-card active";
+                b1.className = "btn btn-primary btn-disabled";
+                b1.disabled = true;
+                b1.innerHTML = `<span class="spinner"></span> Connecting...`;
+                s1.style.display = "block";
+                s1.textContent = msg;
+            } 
+            else if (state === "MODELS_LOADED") {
+                c1.className = "glass-panel step-card completed";
+                b1.className = "btn btn-success";
+                b1.disabled = true;
+                b1.textContent = "✓ Models Connected";
+                s1.style.display = "none";
+
+                c2.className = "glass-panel step-card active";
+                b2.className = "btn btn-primary";
+                b2.disabled = false;
+            }
+            else if (state === "LOADING_DBS") {
+                c1.className = "glass-panel step-card completed";
+                b1.className = "btn btn-success";
+                b1.disabled = true;
+                b1.textContent = "✓ Models Connected";
+
+                c2.className = "glass-panel step-card active";
+                b2.className = "btn btn-primary btn-disabled";
+                b2.disabled = true;
+                b2.innerHTML = `<span class="spinner"></span> Loading...`;
+                s2.style.display = "block";
+                s2.textContent = msg;
+            }
+            else if (state === "DBS_LOADED") {
+                c1.className = "glass-panel step-card completed";
+                b1.className = "btn btn-success";
+                b1.disabled = true;
+                b1.textContent = "✓ Models Connected";
+
+                c2.className = "glass-panel step-card completed";
+                b2.className = "btn btn-success";
+                b2.disabled = true;
+                b2.textContent = "✓ Databases Loaded";
+                s2.style.display = "none";
+
+                c3.className = "glass-panel step-card active";
+                b3.className = "btn btn-primary";
+                b3.disabled = false;
+            }
+            else if (state === "BUILDING_INDEX") {
+                c1.className = "glass-panel step-card completed";
+                b1.className = "btn btn-success";
+                b1.textContent = "✓ Models Connected";
+                c2.className = "glass-panel step-card completed";
+                b2.className = "btn btn-success";
+                b2.textContent = "✓ Databases Loaded";
+
+                c3.className = "glass-panel step-card active";
+                b3.className = "btn btn-primary btn-disabled";
+                b3.disabled = true;
+                b3.innerHTML = `<span class="spinner"></span> Indexing...`;
+                s3.style.display = "block";
+                s3.textContent = `Progress: ${progress}%`;
+                
+                // Show index elements
+                pBarContainer.style.display = "block";
+                pBar.style.width = `${progress}%`;
+                pConsole.style.display = "block";
+                pConsole.textContent += `${msg}\n`;
+                pConsole.scrollTop = pConsole.scrollHeight;
+            }
+            else if (state === "READY") {
+                // Successfully initialized! Hide wizard and reveal beautiful Chat Portal
+                document.getElementById("setup-portal").style.display = "none";
+                const chatPortal = document.getElementById("chat-portal");
+                chatPortal.style.display = "grid";
+                
+                // Sync statistic numbers in sidebar
+                if (statusData.stats) {
+                    document.getElementById("stat-items").textContent = statusData.stats.items_loaded.toLocaleString();
+                    document.getElementById("stat-wiki").textContent = statusData.stats.wiki_titles_indexed.toLocaleString();
+                }
+            }
+            else if (state === "ERROR") {
+                // Handle loading errors gracefully
+                const activeCard = state.includes("MODELS") ? c1 : (state.includes("DB") ? c2 : c3);
+                const activeBtn = state.includes("MODELS") ? b1 : (state.includes("DB") ? b2 : b3);
+                const activeStatus = state.includes("MODELS") ? s1 : (state.includes("DB") ? s2 : s3);
+                
+                activeCard.style.borderColor = "var(--accent-error-glow)";
+                activeCard.style.boxShadow = "0 0 20px rgba(239, 68, 68, 0.1)";
+                
+                activeBtn.className = "btn btn-primary";
+                activeBtn.disabled = false;
+                activeBtn.textContent = "Retry Step";
+                
+                activeStatus.style.display = "block";
+                activeStatus.style.color = "var(--accent-error)";
+                activeStatus.textContent = `Error: ${err}`;
+            }
+        }
+
+        // Trigger loading models (Step 1)
+        async function initModels() {
+            const btn = document.getElementById("btn-step-1");
+            btn.className = "btn btn-primary btn-disabled";
+            btn.disabled = true;
+            btn.innerHTML = `<span class="spinner"></span> Connecting...`;
+            
+            try {
+                const res = await fetch("/api/init/models", { method: "POST" });
+                const data = await res.json();
+                syncUI(data.status);
+            } catch (err) {
+                console.error(err);
+                syncUI({ state: "ERROR", error_message: "Network request failed." });
+            }
+        }
+
+        // Trigger loading databases (Step 2)
+        async function initDbs() {
+            const btn = document.getElementById("btn-step-2");
+            btn.className = "btn btn-primary btn-disabled";
+            btn.disabled = true;
+            btn.innerHTML = `<span class="spinner"></span> Loading...`;
+            
+            try {
+                const res = await fetch("/api/init/dbs", { method: "POST" });
+                const data = await res.json();
+                syncUI(data.status);
+            } catch (err) {
+                console.error(err);
+                syncUI({ state: "ERROR", error_message: "Network request failed." });
+            }
+        }
+
+        // Trigger building lookup indexes (Step 3)
+        async function initIndex() {
+            const btn = document.getElementById("btn-step-3");
+            btn.className = "btn btn-primary btn-disabled";
+            btn.disabled = true;
+            btn.innerHTML = `<span class="spinner"></span> Indexing...`;
+            
+            try {
+                const res = await fetch("/api/init/index", { method: "POST" });
+                const data = await res.json();
+                syncUI(data.status);
+                
+                // Immediately start polling progress
+                checkStatus();
+            } catch (err) {
+                console.error(err);
+                syncUI({ state: "ERROR", error_message: "Network request failed." });
+            }
+        }
+
+        // SUBMIT MESSAGES TO CHAT API
+        async function submitMessage() {
+            const input = document.getElementById("chat-input");
+            const btn = document.getElementById("chat-send-btn");
+            const question = input.value.trim();
+            
+            if (!question) return;
+
+            // Append human message bubble
+            appendMessage("user", question);
+            input.value = "";
+            
+            // Disable input while generating
+            input.disabled = true;
+            btn.disabled = true;
+            
+            // Append temporary assistant typing bubble
+            const loaderId = appendTypingIndicator();
+
+            try {
+                const res = await fetch("/api/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ question: question })
+                });
+                
+                // Remove typing indicator bubble
+                removeElement(loaderId);
+
+                if (!res.ok) {
+                    const errorData = await res.json();
+                    appendMessage("assistant", `Failed to retrieve answer: ${errorData.error || "Server error"}`);
+                    return;
+                }
+
+                const data = await res.json();
+                appendAssistantMessage(data.answer, data.sources, data.used_types, data.item_name);
+
+            } catch (err) {
+                removeElement(loaderId);
+                console.error(err);
+                appendMessage("assistant", "I could not reach the server archives. Please make sure Flask backend is still running.");
+            } finally {
+                input.disabled = false;
+                btn.disabled = false;
+                input.focus();
+            }
+        }
+
+        // Append basic human message
+        function appendMessage(sender, text) {
+            const history = document.getElementById("chat-history");
+            const bubble = document.createElement("div");
+            bubble.className = `chat-bubble ${sender}`;
+            
+            const avatar = sender === "user" ? "User" : "Guide";
+            bubble.innerHTML = `
+                <div class="bubble-avatar">${avatar}</div>
+                <div class="bubble-content">${escapeHTML(text)}</div>
+            `;
+            
+            history.appendChild(bubble);
+            history.scrollTop = history.scrollHeight;
+        }
+
+        // Append RAG response message with custom components (Accordion, stats)
+        function appendAssistantMessage(answer, sources, usedTypes, matchedItem) {
+            const history = document.getElementById("chat-history");
+            const bubble = document.createElement("div");
+            bubble.className = "chat-bubble assistant";
+            
+            let sourceHtml = "";
+            if (sources && sources.length > 0) {
+                const uniqueId = `source-${Date.now()}`;
+                
+                let sourceItems = "";
+                sources.forEach((s, idx) => {
+                    const metaStr = JSON.stringify(s.metadata);
+                    sourceItems += `<strong>Chunk ${idx + 1} Metadata:</strong> ${escapeHTML(metaStr)}\n${escapeHTML(s.content)}\n\n`;
+                });
+
+                sourceHtml = `
+                    <div class="source-accordion">
+                        <button class="source-toggle" onclick="toggleSources('${uniqueId}')">
+                            View Retrieval Sources (${usedTypes.join(", ")}) ${matchedItem ? `for "${matchedItem}"` : ""} ▾
+                        </button>
+                        <div id="${uniqueId}" class="source-content">${sourceItems}</div>
+                    </div>
+                `;
+            }
+
+            bubble.innerHTML = `
+                <div class="bubble-avatar">Guide</div>
+                <div class="bubble-content">
+                    <div class="answer-text">${formatAnswer(answer)}</div>
+                    ${sourceHtml}
+                </div>
+            `;
+            
+            history.appendChild(bubble);
+            history.scrollTop = history.scrollHeight;
+        }
+
+        // Toggle Expandable source facts
+        function toggleSources(elementId) {
+            const el = document.getElementById(elementId);
+            if (el.style.display === "block") {
+                el.style.display = "none";
+            } else {
+                el.style.display = "block";
+            }
+        }
+
+        // Append wise wizard typing visual
+        function appendTypingIndicator() {
+            const history = document.getElementById("chat-history");
+            const bubble = document.createElement("div");
+            const loaderId = `loader-${Date.now()}`;
+            
+            bubble.id = loaderId;
+            bubble.className = "chat-bubble assistant";
+            bubble.innerHTML = `
+                <div class="bubble-avatar">Guide</div>
+                <div class="bubble-content">
+                    <div class="typing-loader">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            `;
+            
+            history.appendChild(bubble);
+            history.scrollTop = history.scrollHeight;
+            return loaderId;
+        }
+
+        function removeElement(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
+        // Helper to ask suggestions
+        function askPreset(presetText) {
+            const input = document.getElementById("chat-input");
+            input.value = presetText;
+            submitMessage();
+        }
+
+        // Format raw response text linebreaks and bold markings nicely
+        function formatAnswer(text) {
+            let formatted = escapeHTML(text);
+            
+            // Replace newlines with breaks
+            formatted = formatted.replace(/\n/g, "<br>");
+            
+            // Replace **bold** markup
+            formatted = formatted.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+            
+            return formatted;
+        }
+
+        // Helper key event handler
+        function handleInputKey(event) {
+            if (event.key === "Enter") {
+                submitMessage();
+            }
+        }
+
+        // Prevent XSS injection
+        function escapeHTML(str) {
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
